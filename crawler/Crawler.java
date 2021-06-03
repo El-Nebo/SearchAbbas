@@ -55,7 +55,7 @@ public class Crawler {
         Crawler crw = new Crawler();
         while(q.size()>0 && NumVisited < MAXVISITS){
 
-        crw.getPageLinks(q.remove());
+          //  crw.getPageLinks(q.remove());
             NumVisited++;
         }
         try{
