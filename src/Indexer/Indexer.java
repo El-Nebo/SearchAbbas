@@ -1,5 +1,6 @@
 package Indexer;
 
+import ca.rmen.porterstemmer.PorterStemmer;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -86,25 +87,53 @@ public class Indexer {
 
     }
 
-    public String[] ProcessHTMLFile(String path) {
-        String FileString = "";
-        try {
-            //  System.out.println("hhhhhhhhh");
-            path = "Htmls/"+path;
-            FileString = Files.readString(Paths.get(path));
-            //System.out.println(FileString);
-        }catch(IOException e){
-        }
-        return String_Parser(FileString);
-    }
+    public String [] ProcessHTMLFile(String path) throws IOException {
 
-    public String[] String_Parser(String HTMLSTring){
-        Document html = Jsoup.parse(HTMLSTring);
-        String title = html.title();
-        String ss = html.body().text();
-        System.out.println("After parsing, words : " + ss);
-        String [] words = ss.split(" ");
-        return words;
+        String FileString = Files.readString(Paths.get(path));
+        Document html = Jsoup.parse(FileString);
+
+        String TotalString=  (html.title() +" "+ html.body().text()).toLowerCase();                                           //Building TotalString
+
+        //System.out.println(TotalString);
+
+        TotalString = TotalString.replaceAll("[^a-zA-Z]", " ");                                                           //Filter all garbage
+        String[] partsbeforeremovingstopwords = TotalString.split(" ");
+
+        ArrayList<String> partsafterremovingstopwords = new ArrayList<String>();
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        HashSet<String> stpwords = new HashSet<String>();
+        File myObj = new File("StopWords.txt");
+        Scanner myReader = new Scanner(myObj);
+        while (myReader.hasNextLine()) {
+            String data = myReader.nextLine();
+            stpwords.add(data);
+        }
+        myReader.close();
+
+        for (String partsbeforeremovingstopword : partsbeforeremovingstopwords) {
+            if (!stpwords.contains(partsbeforeremovingstopword)) {
+                partsafterremovingstopwords.add(partsbeforeremovingstopword);
+            }
+        }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        ArrayList<String> FinalWords = new ArrayList<String>();
+
+        PorterStemmer stemmer = new PorterStemmer();
+        for (String partsafterremovingstopword : partsafterremovingstopwords) {
+            if (!partsafterremovingstopword.isBlank())
+                FinalWords.add(stemmer.stemWord(partsafterremovingstopword));
+        }
+
+        String [] ret = new String[FinalWords.size()];
+        for(int i=0;i< FinalWords.size();i++)
+            ret[i]=FinalWords.get(i);
+        return ret;
     }
 
 
@@ -115,10 +144,10 @@ public class Indexer {
             for (Path file : listing) {
                 if (file.getFileName().toString().toLowerCase()
                         .endsWith(".html")) {
-                    String[] Words = ProcessHTMLFile(file.getFileName().toString());
+                    String[] Words = ProcessHTMLFile("Htmls/" + file.getFileName().toString());
                     String filename = file.getFileName().toString();
                     idx = Integer.parseInt(filename.substring(0,filename.length()-5));
-                    IndexArray(Words,URLs.get(idx-1));
+                    IndexArray(Words,"Abbas"/*URLs.get(idx-1)*/);
                 }
             }
         }
