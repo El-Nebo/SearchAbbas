@@ -8,16 +8,19 @@ import org.jsoup.select.Elements;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.LinkedList;
+//import java.util.HashSet;
+//import java.util.LinkedList;
 import java.sql.*;
+import java.util.*;
+
 import java.util.Scanner;
 
 public class CrawlerThread extends Thread {
     public static HashSet<String> links;
-    public static HashSet<String > Saved_hosts;
-    public static HashSet<> Saved_hosts;
-    public final int MAXVISITS = 250;
+    public static HashSet<String> cont_disallow;
+    public static HashSet<String> Saved_hosts;
+    public static Map<String, List<String>> Disallowed_links = new HashMap<String, List<String>>();
+    public final int MAXVISITS = 2250;
     public static LinkedList<String> q;
     public static Connection con;
     //  public static BufferedWriter bw1 , bw2;
@@ -27,6 +30,8 @@ public class CrawlerThread extends Thread {
         //ConnectToMySql();
         try {
             links = new HashSet<String>();
+            Saved_hosts = new HashSet<String>();
+            cont_disallow = new HashSet<String>();
             q = new LinkedList<String>();
             // load visited links
             File myObj = new File("visited.txt");
@@ -69,7 +74,7 @@ public class CrawlerThread extends Thread {
         try {
 
             while (links.size() < MAXVISITS) {
-
+               // System.out.println("I'm in while");
                 synchronized (q) {
                     while (q.isEmpty())
                         q.wait();
@@ -85,7 +90,18 @@ public class CrawlerThread extends Thread {
                 synchronized (links) {
 
 
-                    if (!links.contains(url)) {
+                    if (!links.contains(url) && !cont_disallow.contains(url)) {
+                        Boolean disallowed = false;
+                        try {
+                            // System.out.println("hhhhhhhhhhhhhhhhhhhhhhh");
+                            GetRobotTxt(url);
+                            disallowed= CheckRobotTxt (url);
+                            if (disallowed){
+                                cont_disallow.add(url);
+                                continue;
+                            }
+                        }
+                        catch (Exception m){}
                         links.add(url);
                         try {
                             FileWriter fw1 = new FileWriter(f1.getName(),true);
@@ -98,16 +114,13 @@ public class CrawlerThread extends Thread {
                         }
                         num = links.size();
 
-                        System.out.println(num);
+                       // System.out.println(num);
                     }else{
                         test = false;
                     }
                 }
                 if (test){
-                    try {
-                        //Boolean check = CheckRobotTxt(url);
-                    }
-                    catch (Exception m){}
+
 
 
                     try {
@@ -153,38 +166,62 @@ public class CrawlerThread extends Thread {
     }
 
 
-    void CheckRobotTxt (String url) throws MalformedURLException {
+    void GetRobotTxt (String url) throws MalformedURLException {
         try {
             //System.out.println(url);
+            if (url == null){
+                return;
+            }
             URL my_url = new URL(url);
-            String s = my_url.getHost();
-            if (! Saved_hosts.contains(s)){
-                Saved_hosts.add(s);
+            String h = my_url.getHost();
+           if (! Saved_hosts.contains(h)){
+                Saved_hosts.add(h);
             }
             else{
-                return ;
+               return ;
             }
             String pr = my_url.getProtocol();
 
             //
-            s = pr+"://" + s + "/robots.txt";
-            // System.out.println(s);
+            String s = pr+"://" + h + "/robots.txt";
+           // System.out.println(s);
+            List<String> temp = new ArrayList<String>();
             try (BufferedReader in = new BufferedReader(
                     new InputStreamReader(new URL(s).openStream()))) {
                 String line = null;
                 while ((line = in.readLine()) != null) {
-                    System.out.println(line);
+                   // System.out.println(line);
+                    String dis = line.substring(0, Math.min(line.length(), 8));
+                   // System.out.println(dis);
+                    if (dis.equals("Disallow")){
+                        String d = pr+"://"+h+line.substring(10,line.length()) ;
+                       // System.out.println(d);
+                        temp.add(d);
+                    }
                 }
+                Disallowed_links.put(h, temp);
             } catch (IOException e) {
                 //    e.printStackTrace();
             }
         }catch (Exception e){
-
+           // System.out.println(e);
         }
-        return ;
+       // return ;
     }
 
-
+    Boolean CheckRobotTxt (String url) throws MalformedURLException {
+        URL my_url = new URL(url);
+        String h = my_url.getHost();
+        List<String> temp = new ArrayList<String>();
+        temp = Disallowed_links.get(h);
+        for (int i = 0 ; i < temp.size() ; i++){
+            if (url.contains(temp.get(i))){
+                System.out.println("Mamnoooooo3"+" "+url);
+                return true;
+            }
+        }
+        return false;
+    }
 
 
 
