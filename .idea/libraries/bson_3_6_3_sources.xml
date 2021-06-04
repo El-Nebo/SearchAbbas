@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="bson-3.6.3-sources">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/mongo-driver-3.6.3/bson-3.6.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/mongo-driver-3.6.3/mongodb-driver-3.6.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/mongo-driver-3.6.3/mongodb-driver-core-3.6.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/mongo-driver-3.6.3/snowball-1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/mongo-driver-3.6.3/bson-3.6.3-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/mongo-driver-3.6.3/mongodb-driver-3.6.3-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/mongo-driver-3.6.3/mongodb-driver-core-3.6.3-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/mongo-driver-3.6.3/snowball-1.0.jar!/" />
+    </SOURCES>
+  </library>
+</component>

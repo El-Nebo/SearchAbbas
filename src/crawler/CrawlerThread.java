@@ -16,7 +16,7 @@ import java.util.Scanner;
 public class CrawlerThread extends Thread {
     public static HashSet<String> links;
     public static HashSet<String > Saved_hosts;
-    public static HashSet<> Saved_hosts;
+    //public static HashSet<> Saved_hosts;
     public final int MAXVISITS = 250;
     public static LinkedList<String> q;
     public static Connection con;
