@@ -22,10 +22,9 @@ public class CrawlerMain {
 
 
         // Add Some Seeds
-        //CrawlerThread.q.add("https://www.netflix.com/eg-en/browse/genre/34399");
         CrawlerThread.q.add("https://en.wikipedia.org/wiki/");
-       // CrawlerThread.q.add("https://www.geeksforgeeks.org/");
-      //  CrawlerThread.q.add("https://www.w3schools.com/");
+        CrawlerThread.q.add("https://www.geeksforgeeks.org/");
+        CrawlerThread.q.add("https://www.w3schools.com/");
 
         //Create Threads
         CrawlerThread [] threads=new CrawlerThread[ThreadsNum];
@@ -43,9 +42,10 @@ public class CrawlerMain {
 
         //finised crawling
         int count=CrawlerThread.links.size();
-        for (String url : CrawlerThread.links) {
+       /* for (String url : CrawlerThread.links) {
             System.out.println(url);
-        }
+        }*/
         System.out.println("Number of files:" +count);
+        CrawlerThread.end();
     }
 }
