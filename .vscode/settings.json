@@ -1,6 +1,0 @@
-{
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "crawler/jsoup-1.13.1.jar"
-    ]
-}
