@@ -9,7 +9,7 @@ import org.jsoup.select.Elements;
 import java.util.LinkedList;
 import java.util.Queue;
 public class Crawler {
-
+    //
     private HashSet<String> links;
 
     public Crawler() {
