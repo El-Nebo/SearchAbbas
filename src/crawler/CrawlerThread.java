@@ -20,11 +20,11 @@ public class CrawlerThread extends Thread {
     public static HashSet<String> cont_disallow;
     public static HashSet<String> Saved_hosts;
     public static Map<String, List<String>> Disallowed_links = new HashMap<String, List<String>>();
-    public final int MAXVISITS = 2250;
+    public final int MAXVISITS = 5000;
     public static LinkedList<String> q;
     public static Connection con;
-    //  public static BufferedWriter bw1 , bw2;
-    //public static FileWriter fw1 , fw2;
+    public static BufferedWriter bw1 , bw2;
+    public static FileWriter fw1 , fw2;
     public static  File f1 , f2;
     public static void init() {
         //ConnectToMySql();
@@ -59,10 +59,10 @@ public class CrawlerThread extends Thread {
             if(!f2.exists()) {
                 f2.createNewFile();
             }
-            //fw1 = new FileWriter(f1.getName(),true);
-            //fw2 = new FileWriter(f2.getName(),true);
-            //  bw1 = new BufferedWriter(fw1);
-            //  bw2 = new BufferedWriter(fw2);
+            fw1 = new FileWriter(f1.getName(),true);
+            fw2 = new FileWriter(f2.getName(),true);
+            bw1 = new BufferedWriter(fw1);
+            bw2 = new BufferedWriter(fw2);
         }catch (IOException  e){
             e.printStackTrace();
         }
@@ -94,7 +94,7 @@ public class CrawlerThread extends Thread {
                         Boolean disallowed = false;
                         try {
                             // System.out.println("hhhhhhhhhhhhhhhhhhhhhhh");
-                            GetRobotTxt(url);
+                           GetRobotTxt(url);
                             disallowed= CheckRobotTxt (url);
                             if (disallowed){
                                 cont_disallow.add(url);
@@ -104,17 +104,18 @@ public class CrawlerThread extends Thread {
                         catch (Exception m){}
                         links.add(url);
                         try {
-                            FileWriter fw1 = new FileWriter(f1.getName(),true);
-                            BufferedWriter bw1 = new BufferedWriter(fw1);
+                            //FileWriter fw1 = new FileWriter(f1.getName(),true);
+                           // bw1 = new BufferedWriter(fw1);
                             bw1.write(url + "\n");
-                            bw1.close();
+                            bw1.flush();
+                          //  bw1.close();
                         }
                         catch (Exception e){
 
                         }
                         num = links.size();
 
-                       // System.out.println(num);
+                       System.out.println(num);
                     }else{
                         test = false;
                     }
@@ -138,14 +139,15 @@ public class CrawlerThread extends Thread {
                             synchronized (q){
                                 q.add(newUrl);
                                 try {
-                                    FileWriter fw2 = new FileWriter(f2.getName(),true);
-                                    BufferedWriter bw2 = new BufferedWriter(fw2);
-                                    bw2.write(newUrl + "\n");
-                                    bw2.close();
-                                }
+                                  //  FileWriter fw2 = new FileWriter(f2.getName(),true);
+                                    //BufferedWriter bw2 = new BufferedWriter(fw2);
+                                  bw2.write(newUrl + "\n");
+                                    bw2.flush();
+                                    //bw2.close();
+                               }
                                 catch (IOException e){
 
-                                }
+                               }
                                 q.notifyAll();
                             }
                         }
@@ -237,14 +239,14 @@ public class CrawlerThread extends Thread {
     }
     public static void end() {
         //ConnectToMySql();
-        // try {
+         try {
         // fw1.close();
         // fw2.close();
-        //   bw1.close();
-        // bw2.close();
-        // }catch (IOException e){
-        //   e.printStackTrace();
-        //}
+           bw1.close();
+           bw2.close();
+         }catch (IOException e){
+           e.printStackTrace();
+        }
     }
 
     public static void SaveHtmlToFile (String url , int fileNum){
