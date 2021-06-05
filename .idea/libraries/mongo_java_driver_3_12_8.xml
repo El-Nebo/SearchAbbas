@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="jsoup-1.13.1">
+  <library name="mongo-java-driver-3.12.8">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/jsoup-1.13.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/mongo-java-driver-3.12.8.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

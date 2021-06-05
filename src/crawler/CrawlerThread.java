@@ -8,8 +8,6 @@ import org.jsoup.select.Elements;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-//import java.util.HashSet;
-//import java.util.LinkedList;
 import java.sql.*;
 import java.util.*;
 
@@ -27,7 +25,6 @@ public class CrawlerThread extends Thread {
     public static FileWriter fw1 , fw2;
     public static  File f1 , f2;
     public static void init() {
-        //ConnectToMySql();
         try {
             links = new HashSet<String>();
             Saved_hosts = new HashSet<String>();
@@ -74,7 +71,6 @@ public class CrawlerThread extends Thread {
         try {
 
             while (links.size() < MAXVISITS) {
-               // System.out.println("I'm in while");
                 synchronized (q) {
                     while (q.isEmpty())
                         q.wait();
@@ -84,7 +80,6 @@ public class CrawlerThread extends Thread {
 
 
 
-                // if (!links.contains(url)){
                 int num = 0;
                 Boolean test = true;
                 synchronized (links) {
@@ -104,18 +99,16 @@ public class CrawlerThread extends Thread {
                         catch (Exception m){}
                         links.add(url);
                         try {
-                            //FileWriter fw1 = new FileWriter(f1.getName(),true);
-                           // bw1 = new BufferedWriter(fw1);
                             bw1.write(url + "\n");
+
                             bw1.flush();
-                          //  bw1.close();
                         }
                         catch (Exception e){
 
                         }
                         num = links.size();
 
-                       System.out.println(num);
+                      // System.out.println(num);
                     }else{
                         test = false;
                     }
@@ -139,11 +132,9 @@ public class CrawlerThread extends Thread {
                             synchronized (q){
                                 q.add(newUrl);
                                 try {
-                                  //  FileWriter fw2 = new FileWriter(f2.getName(),true);
-                                    //BufferedWriter bw2 = new BufferedWriter(fw2);
+
                                   bw2.write(newUrl + "\n");
                                     bw2.flush();
-                                    //bw2.close();
                                }
                                 catch (IOException e){
 
@@ -170,7 +161,6 @@ public class CrawlerThread extends Thread {
 
     void GetRobotTxt (String url) throws MalformedURLException {
         try {
-            //System.out.println(url);
             if (url == null){
                 return;
             }
@@ -186,18 +176,14 @@ public class CrawlerThread extends Thread {
 
             //
             String s = pr+"://" + h + "/robots.txt";
-           // System.out.println(s);
             List<String> temp = new ArrayList<String>();
             try (BufferedReader in = new BufferedReader(
                     new InputStreamReader(new URL(s).openStream()))) {
                 String line = null;
                 while ((line = in.readLine()) != null) {
-                   // System.out.println(line);
                     String dis = line.substring(0, Math.min(line.length(), 8));
-                   // System.out.println(dis);
                     if (dis.equals("Disallow")){
                         String d = pr+"://"+h+line.substring(10,line.length()) ;
-                       // System.out.println(d);
                         temp.add(d);
                     }
                 }
@@ -238,7 +224,6 @@ public class CrawlerThread extends Thread {
         }catch(Exception e){ System.out.println(e);}
     }
     public static void end() {
-        //ConnectToMySql();
          try {
         // fw1.close();
         // fw2.close();

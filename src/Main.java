@@ -1,21 +1,18 @@
-import indexer.Indexer;
+import Indexer.Indexer;
 import crawler.CrawlerMain;
+import DB.MongoDB;
 
+import java.util.ArrayList;
 public class Main {
     public static void main(String [] args){
         try {
-            //CrawlerMain.main(args);
-            //Indexer.ProcessHTMLFile("Htmls/112.html");
-
-            Indexer Abbas = new Indexer();
-            Abbas.ProcessHTMLFile("40.html");
-            Abbas.ProcessAllFiles();
-            Abbas.Print();
-            System.out.println("ABBBB "+ Abbas.WordMap.size());
+           // CrawlerMain.main(args);
+           Indexer Abbas = new Indexer();
+           Abbas.ProcessAllFiles();
+          Abbas.WriteOnDB();
         }
         catch(Exception e){
             e.printStackTrace();
         }
-
     }
 }

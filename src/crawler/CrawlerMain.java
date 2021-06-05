@@ -9,7 +9,6 @@ public class CrawlerMain {
     static int ThreadsNum;
     public static void main(String[] args)throws Exception
     {
-        //ConnectToMySql ();
         System.out.println("Start CrawlerThread");
         //Initialize Crawler Parameters
         CrawlerThread.init();
@@ -22,9 +21,9 @@ public class CrawlerMain {
 
 
         // Add Some Seeds
-        CrawlerThread.q.add("https://en.wikipedia.org/wiki/");
-        CrawlerThread.q.add("https://www.geeksforgeeks.org/");
-        CrawlerThread.q.add("https://www.w3schools.com/");
+//        CrawlerThread.q.add("https://en.wikipedia.org/wiki/");
+//        CrawlerThread.q.add("https://www.geeksforgeeks.org/");
+//        CrawlerThread.q.add("https://www.w3schools.com/");
 
         //Create Threads
         CrawlerThread [] threads=new CrawlerThread[ThreadsNum];
