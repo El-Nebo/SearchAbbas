@@ -67,28 +67,18 @@ public class CrawlerThread extends Thread {
 
     @Override
     public void run() {
-
         try {
-
             while (links.size() < MAXVISITS) {
                 synchronized (q) {
                     while (q.isEmpty())
                         q.wait();
                 }
-                ////////////////// 1 ) msekt elly 3lih eldor
                 String url = q.poll();
-
-
-
                 int num = 0;
-                Boolean test = true;
                 synchronized (links) {
-
-
                     if (!links.contains(url) && !cont_disallow.contains(url)) {
                         Boolean disallowed = false;
                         try {
-                            // System.out.println("hhhhhhhhhhhhhhhhhhhhhhh");
                            GetRobotTxt(url);
                             disallowed= CheckRobotTxt (url);
                             if (disallowed){
@@ -100,57 +90,32 @@ public class CrawlerThread extends Thread {
                         links.add(url);
                         try {
                             bw1.write(url + "\n");
-
                             bw1.flush();
                         }
                         catch (Exception e){
-
                         }
                         num = links.size();
-
-                      // System.out.println(num);
-                    }else{
-                        test = false;
                     }
                 }
-                if (test){
-
-
-
                     try {
-                        //////////////////// 2) tl3t el links elly fih
                         Document document = Jsoup.connect(url).get();
                         Elements linksOnPage = document.select("a[href]");
-
-
-
-
-                        ////////////////// 3) 3mltelhom save f el queue
                         for (Element page : linksOnPage) {
                             String newUrl = page.attr("abs:href");
-
                             synchronized (q){
                                 q.add(newUrl);
                                 try {
-
-                                  bw2.write(newUrl + "\n");
+                                    bw2.write(newUrl + "\n");
                                     bw2.flush();
                                }
                                 catch (IOException e){
-
                                }
                                 q.notifyAll();
                             }
                         }
                     } catch (Exception e){}
 
-                    //////////////////////////// 4) ba save el Html to a file
-                    SaveHtmlToFile(url, num);
-
-
-
-                    ////////////////////////// the end
-                }
+                    SaveHtmlToFile(url, num);  
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -158,23 +123,20 @@ public class CrawlerThread extends Thread {
 
     }
 
-
     void GetRobotTxt (String url) throws MalformedURLException {
         try {
-            if (url == null){
+            if (url == null)
                 return;
-            }
+            
             URL my_url = new URL(url);
-            String h = my_url.getHost();
-           if (! Saved_hosts.contains(h)){
-                Saved_hosts.add(h);
-            }
-            else{
+            String host = my_url.getHost();
+           if (! Saved_hosts.contains(host))
+                Saved_hosts.add(host);
+            else
                return ;
-            }
+            
             String pr = my_url.getProtocol();
 
-            //
             String s = pr+"://" + h + "/robots.txt";
             List<String> temp = new ArrayList<String>();
             try (BufferedReader in = new BufferedReader(
@@ -189,12 +151,12 @@ public class CrawlerThread extends Thread {
                 }
                 Disallowed_links.put(h, temp);
             } catch (IOException e) {
-                //    e.printStackTrace();
+                   e.printStackTrace();
             }
         }catch (Exception e){
-           // System.out.println(e);
+           System.out.println(e);
         }
-       // return ;
+
     }
 
     Boolean CheckRobotTxt (String url) throws MalformedURLException {
@@ -204,15 +166,11 @@ public class CrawlerThread extends Thread {
         temp = Disallowed_links.get(h);
         for (int i = 0 ; i < temp.size() ; i++){
             if (url.contains(temp.get(i))){
-                System.out.println("Mamnoooooo3"+" "+url);
                 return true;
             }
         }
         return false;
     }
-
-
-
 
 
     public static void ConnectToMySql(){
@@ -225,8 +183,6 @@ public class CrawlerThread extends Thread {
     }
     public static void end() {
          try {
-        // fw1.close();
-        // fw2.close();
            bw1.close();
            bw2.close();
          }catch (IOException e){
