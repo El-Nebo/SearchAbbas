@@ -10,13 +10,13 @@ SearchAbbas is a search engine similar to Google, Yahoo, and Bing. The repo cont
 
 </div>
 
-## 💻 Technologies Used <a name = "tech"></a>
+## 💻 Technologies We Used <a name = "tech"></a>
 - Java
 - Node.js
 - Flutter
 - MongoDB
 
-### ✨ Contributors
+### ✨ Contributors:
 <table>
   <tr>
     <td align="center"><a href="https://github.com/El-Nebo"><img src="https://avatars0.githubusercontent.com/u/62252633?s=250&v=4" width="150px;" alt=""/><br /><sub><b>Mohamed Nabawe</b></sub></a><br /></td>
