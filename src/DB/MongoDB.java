@@ -17,7 +17,7 @@ import java.util.Set;
 public class MongoDB {
     MongoClient mc;
     MongoDatabase db;
-    //private static DBCollection IndexCollection;
+
     MongoCollection<Document> IndexCollection;
     MongoCollection<Document> RULTitles;
     public MongoDB(String db_Name) {
@@ -31,8 +31,6 @@ public class MongoDB {
         }catch(Exception e){}
         IndexCollection =  db.getCollection("Indexer");
         RULTitles = db.getCollection("URLTitle");
-        //org.bson.Document abbas = new Document("Abbas" , "Etman");
-        //IndexCollection.insertOne(abbas);
     }
 
     public void AddWordURLs(String word, Set<String> urls){
