@@ -31,11 +31,11 @@ app.get('/search/:data?', (req, res) => {
             function (err, fout) {
                 if (err) throw err;
                 if (fout != null) {
-                    fout.URLs.forEach((element, idx) => {
+                    fout.URLs.forEach((element, idx) => {ز
                         db.collection("URLTitle").findOne({ URL: element },
                             function (err2, fout2) {
                                 if (err2) throw err2;
-                                if(!!fout2)
+                                if(fout2)
                                     arr.push(fout2);
                                 if (idx === fout.URLs.length - 1) {
                                     let ob ={result: arr};
