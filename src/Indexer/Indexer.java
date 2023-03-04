@@ -29,11 +29,10 @@ import DB.MongoDB;
 public class Indexer {
     public  HashMap<String, HashMap<String, ArrayList<Integer>>> WordMap;
 
-    ///////////////////DataBase//////
+    ///////////////////DataBase///////////////////////////
     public static final String DATABASE_NAME = "SearchAbbas";
     public static final String DATABASE_HOST_ADDRESS = "localhost";
     public static final int DATABASE_PORT_NUMBER = 27017;
-
     MongoDB myDB = new MongoDB("SearchAbbas");
 
     public static final int Num = 5000;
@@ -44,25 +43,14 @@ public class Indexer {
     ///////////////////////////////
 
     public void WriteOnDB(){
-        //System.out.println(WordMap.size());
+
         DBObject WordIndex = new BasicDBObject("word","Abbas");
         for (Map.Entry mapElement : WordMap.entrySet()) {
             String word = (String)mapElement.getKey();
-            //System.out.println("Word  " + word);
+
             HashMap<String,ArrayList<Integer>> urls = (HashMap<String,ArrayList<Integer>>)(mapElement.getValue());
             Set<String> WordURLs = urls.keySet();
             myDB.AddWordURLs(word,WordURLs);
-//            for(Map.Entry mapelement2 : urls.entrySet()){
-//                String URL = (String)mapelement2.getKey();
-//               // System.out.print("URL: "+URL+" ");
-//                ArrayList<Integer> pos = (ArrayList<Integer>) mapelement2.getValue();
-//                //////////////////////////////
-//                myDB.AddWordIndex(word, URL, pos);
-//               // System.out.println("Aaaaa: "+word + " " + URL + " " + pos.get(0));
-//                ///////////////////////////////
-//                for (Integer po : pos) System.out.print(po + " ");
-//                //System.out.println("");
-//            }
         }
     }
 
@@ -81,9 +69,6 @@ public class Indexer {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        for (int i = 0 ; i < URLs.size() ; i++){
-          //  System.out.println(URLs.get(i));
-        }
     }
 
     public String [] ProcessHTMLFile(String path, int idx) throws IOException {
@@ -91,19 +76,16 @@ public class Indexer {
         String FileString = Files.readString(Paths.get(path));
         Document html = Jsoup.parse(FileString);
 
-        String TotalString=  (html.title() +" "+ html.body().text()).toLowerCase();                                           //Building TotalString
+        String TotalString=  (html.title() +" "+ html.body().text()).toLowerCase();      //Building TotalString
 
         myDB.AddTitle(URLs.get(idx-1),html.title());
 
-        TotalString = TotalString.replaceAll("[^a-zA-Z]", " ");                                                           //Filter all garbage
+        TotalString = TotalString.replaceAll("[^a-zA-Z]", " ");                   //Filter all garbage
         String[] partsbeforeremovingstopwords = TotalString.split(" ");
 
         ArrayList<String> partsafterremovingstopwords = new ArrayList<String>();
 
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+         // scanning
         HashSet<String> stpwords = new HashSet<String>();
         File myObj = new File("StopWords.txt");
         Scanner myReader = new Scanner(myObj);
@@ -113,16 +95,15 @@ public class Indexer {
         }
         myReader.close();
 
+        // removing stop words
         for (String partsbeforeremovingstopword : partsbeforeremovingstopwords) {
             if (!stpwords.contains(partsbeforeremovingstopword)) {
                 partsafterremovingstopwords.add(partsbeforeremovingstopword);
             }
         }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+        // stemming
         ArrayList<String> FinalWords = new ArrayList<String>();
-
         PorterStemmer stemmer = new PorterStemmer();
         for (String partsafterremovingstopword : partsafterremovingstopwords) {
             if (!partsafterremovingstopword.isBlank())
